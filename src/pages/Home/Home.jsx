@@ -1,10 +1,17 @@
 import React from "react";
-import Navbar from "../../components/Navbar";
-
+import Banner from "../../components/Banner/Banner";
+import ProcessSteps from "../../components/ProcessSteps/ProcessSteps ";
+import AboutUs from "../../components/AboutUs/AboutUs";
+import StatisticsCards from "../../components/StatisticsCards/StatisticsCards";
 const Home = () => {
-  return <div>
-    <h1 className="text-4xl font-bold bg-amber-700">Welcome to the Home Page!</h1>
-  </div>;
+  return (
+    <div>
+      <Banner />
+      <ProcessSteps />
+      <AboutUs />
+      <StatisticsCards />
+    </div>
+  );
 };
 
 export default Home;
