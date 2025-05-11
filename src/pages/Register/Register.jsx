@@ -30,6 +30,9 @@ const Register = () => {
     e.preventDefault();
     const { fullName, email, password } = formData;
     setErrorMsg("");
+    const updateData = {
+      displayName: fullName
+    }
     try {
       const userInfo = {
         name: fullName,
@@ -40,7 +43,7 @@ const Register = () => {
       const signUpResponse = await signUpWithEmail(email, password);
       console.log(signUpResponse);
 
-      await updateProfileData(userInfo);
+      await updateProfileData(updateData);
 
       const dbResponse = await axiosPublic.post('http://localhost:5000/users', userInfo);
       if (dbResponse.data.insertedId) {
