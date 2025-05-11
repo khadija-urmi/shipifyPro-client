@@ -3,14 +3,13 @@ import CountUp from "react-countup";
 import { FaBoxes, FaTruck, FaUsers } from "react-icons/fa";
 
 const StatisticsCards = () => {
-
+    const [errorMsg, setErrorMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
     const [parcelsBooked, setParcelsBooked] = useState(0);
     const [parcelsDelivered, setParcelsDelivered] = useState(0);
     const [usersCount, setUsersCount] = useState(0);
 
-
     useEffect(() => {
-
         setTimeout(() => {
             setParcelsBooked(12000);
             setParcelsDelivered(11500);

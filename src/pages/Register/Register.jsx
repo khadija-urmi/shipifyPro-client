@@ -1,7 +1,17 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import Swal from 'sweetalert2'
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../Hooks/useAuth";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import SocialLogin from "../../share/SocialLogIn/SocialLogIn";
 
 const Register = () => {
+  const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const { signUpWithEmail,
+    updateProfileData } = useAuth();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -16,16 +26,47 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log(formData);
+    const { fullName, email, password } = formData;
+    setErrorMsg("");
+    try {
+      const userInfo = {
+        name: fullName,
+        email: email,
+        role: "User",
+      };
+
+      const signUpResponse = await signUpWithEmail(email, password);
+      console.log(signUpResponse);
+
+      await updateProfileData(userInfo);
+
+      const dbResponse = await axiosPublic.post('http://localhost:5000/users', userInfo);
+      if (dbResponse.data.insertedId) {
+        Swal.fire({
+          title: "Successfully !",
+          text: "Signed Up",
+          icon: "success"
+        });
+        console.log('Successfully added to database');
+      }
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+      Swal.fire({
+        title: "Error !",
+        text: `Error adding user to database: ${err.message}`,
+        icon: "error"
+      });
+    }
   };
+
 
   return (
     <div >
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <div className="max-w-md w-full  bg-white p-8 rounded-lg shadow-md">
           <div>
             <h2 className="text-center text-2xl font-semibold text-gray-900">
               Create Account
@@ -38,7 +79,7 @@ const Register = () => {
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
                 <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
@@ -100,9 +141,13 @@ const Register = () => {
               </button>
             </div>
           </form>
+          <div>
+            <SocialLogin />
+          </div>
         </div>
+
       </div>
-      <div></div>
+
     </div>
   );
 };
