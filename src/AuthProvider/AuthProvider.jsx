@@ -21,11 +21,12 @@ const AuthProvider = ({ children }) => {
         setLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
-    const updateProfileData = (userName, image) => {
+    const updateProfileData = (userName, image, phone) => {
         setLoading(true)
         return updateProfile(auth.currentUser, {
             displayName: userName,
-            photoURL: image
+            photoURL: image,
+            phoneNumber: phone
         });
     }
     const signOutUser = () => {

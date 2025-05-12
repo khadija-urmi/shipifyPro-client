@@ -9,7 +9,7 @@ import { FaHome } from "react-icons/fa";
 
 const Sidebar = () => {
   const [users, isLoading] = useUser('');
-  // console.log(users?.role);
+
   const [toggle, setToggle] = useState(false);
   const handleToggle = () => {
     setToggle(!toggle);

@@ -4,11 +4,13 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/useAuth";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import SocialLogin from "../../share/SocialLogIn/SocialLogIn";
+import { uploadImageToServer } from "../../utility/utils";
 
 const Register = () => {
   const axiosPublic = useAxiosPublic();
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
+  const [image, setImage] = useState(null);
 
   const { signUpWithEmail,
     updateProfileData } = useAuth();
@@ -18,6 +20,10 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -30,20 +36,18 @@ const Register = () => {
     e.preventDefault();
     const { fullName, email, password } = formData;
     setErrorMsg("");
-    const updateData = {
-      displayName: fullName
-    }
+    const imageURL = await uploadImageToServer(image);
     try {
       const userInfo = {
         name: fullName,
         email: email,
         role: "User",
+        photoURL: imageURL
       };
 
       const signUpResponse = await signUpWithEmail(email, password);
+      await updateProfileData(fullName, imageURL);
       console.log(signUpResponse);
-
-      await updateProfileData(updateData);
 
       const dbResponse = await axiosPublic.post('http://localhost:5000/users', userInfo);
       if (dbResponse.data.insertedId) {
@@ -134,7 +138,16 @@ const Register = () => {
                 />
               </div>
             </div>
-
+            <div className="mt-4">
+              <label className="block mb-2 text-sm font-medium text-gray-900 ">
+                Upload New Profile Picture
+              </label>
+              <input
+                className="block w-full text-sm text-gray-900 border border-black rounded-md cursor-pointer bg-gray-50  focus:outline-none "
+                type="file"
+                onChange={handleFileChange}
+              />
+            </div>
             <div>
               <button
                 type="submit"

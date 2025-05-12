@@ -1,5 +1,4 @@
 import useAxiosPublic from '../../../Hooks/useAxiosPublic';
-import useUser from '../../../Hooks/useUser';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import {
@@ -22,10 +21,12 @@ const AllUser = () => {
   const [currentPageData, setCurrentPageData] = useState([]);
   const { user } = useAuth();
 
+  console.log(user)
 
-  //const axiosSecure = useAxiosSecure()
+
+
   const axiosPublic = useAxiosPublic()
-  const { data: users = [], isLoading, refetch } = useQuery({
+  const { data: users = [], refetch } = useQuery({
     queryKey: ["users"],
     enabled: !!user,
     queryFn: async () => {
@@ -34,9 +35,6 @@ const AllUser = () => {
     }
   })
 
-  // const userCount= users?.map(u=>u.
-  //   bookingCount)
-  // console.log(userCount)
   const makeDeliveryMen = (id) => {
     console.log(id)
     axiosPublic.patch(`/changeRole/${id}`)
@@ -47,7 +45,7 @@ const AllUser = () => {
             text: "User Role Successfully Modified. ",
             icon: "success",
           });
-          // timer: 1000
+
         }
         console.log(res.data)
         refetch()
@@ -66,7 +64,7 @@ const AllUser = () => {
             text: "User Role Successfully Modified. ",
             icon: "success",
           });
-          // timer: 1000
+
         }
       })
       .catch(err => console.log(err))
@@ -75,14 +73,13 @@ const AllUser = () => {
     <div className='w-11/12 mx-auto'>
       <div className="min-h-[85vh]">
         <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
+          <TableCaption>A list of all registered users in the system.</TableCaption>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[100px]">User’s Name</TableHead>
-              <TableHead className="text-center">Phone Number</TableHead>
+              <TableHead className="w-[100px]">Name</TableHead>
               <TableHead>User Type:</TableHead>
               <TableHead className="text-center">Number of parcels Booked</TableHead>
-              <TableHead className="text-right">Make Role Button</TableHead>
+              <TableHead className="text-center ">Change The Role</TableHead>
 
             </TableRow>
           </TableHeader>
@@ -91,14 +88,13 @@ const AllUser = () => {
               <TableRow key={user?._id}>
 
                 <TableCell>{user?.name}</TableCell>
-                <TableCell className="text-center">{user?.phone || 'N/A'}</TableCell>
                 <TableCell>{user?.role}</TableCell>
-                <TableCell className="text-center text-green-400 text-xl font-semibold">{user?.bookingCount || 0} </TableCell>
+                <TableCell className="text-center text-gray-400 text-xl font-semibold">{user?.bookingCount || 0} </TableCell>
                 <TableCell className="text-right space-x-3">
                   <div className='space-y-4 md:space-y-0 md:space-x-3'>
 
-                    <Button onClick={() => makeDeliveryMen(user?._id)}>Make Delivery Men</Button>
-                    <Button onClick={() => makeUser(user?._id)}>Make Admin</Button>
+                    <button className='bg-primaryClr text-white rounded-md py-2 px-8' onClick={() => makeDeliveryMen(user?._id)}> Delivery Men</button>
+                    <button className='bg-primaryClr text-white rounded-md py-2 px-8' onClick={() => makeUser(user?._id)}> Admin</button>
                   </div>
                 </TableCell>
 

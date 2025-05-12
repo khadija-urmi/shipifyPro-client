@@ -17,11 +17,12 @@ const SocialLogin = () => {
             .then((res) => {
 
                 const userData = {
-                    userName: res.user?.displayName,
+                    name: res.user?.displayName,
                     photo: res?.user?.photoURL,
                     email: res.user?.email,
                     role: "User",
                 }
+                console.log(userData)
                 axiosPublic
                     .post("/users", userData)
                     .then((res) => {

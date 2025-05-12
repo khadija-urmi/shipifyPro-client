@@ -6,10 +6,8 @@ import { FaUser, FaPhone, FaCamera } from "react-icons/fa";
 
 const MyProfile = () => {
     const { user, updateProfileData } = useAuth();
-    console.log("user", user)
 
     const [username, setUsername] = useState(user?.displayName || "");
-    const [email, setEmail] = useState(user?.email || "");
     const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
     const [photo, setPhoto] = useState(user?.photoURL || "");
     const [newPhoto, setNewPhoto] = useState(null);
@@ -25,7 +23,7 @@ const MyProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (username !== user?.displayName || email !== user?.email) {
+            if (username !== user?.displayName) {
                 await updateProfileData(username, user?.photoURL)
             }
 
@@ -34,7 +32,7 @@ const MyProfile = () => {
             }
             if (newPhoto) {
                 const imageURL = await uploadImageToServer(newPhoto);
-                await updateProfileData(username, imageURL);
+                await updateProfileData(username, imageURL, phoneNumber);
                 setPhoto(imageURL);
             }
             toast.success("Profile updated successfully!");
@@ -65,7 +63,7 @@ const MyProfile = () => {
                     <div className="pt-20 pb-8 px-8 ">
                         <div className="text-center mb-8">
                             <h2 className="text-2xl font-bold">{username}</h2>
-                            <p className=" mt-1">{email}</p>
+                            <p className=" mt-1">{user?.email}</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
