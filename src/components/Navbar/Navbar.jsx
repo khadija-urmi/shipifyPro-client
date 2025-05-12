@@ -5,10 +5,10 @@ import useAuth from "../../Hooks/useAuth";
 import { IoMdLogOut } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
-import Swal from "sweetalert2"; // Assuming you're using Swal for alerts
+import Swal from "sweetalert2";
 
 const Navbar = () => {
-  const { user, signOutUser } = useAuth(); // Assuming 'user' is the logged-in user
+  const { user, signOutUser } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -57,7 +57,7 @@ const Navbar = () => {
               Home
             </NavLink>
             <NavLink
-              to="/book-parcel"
+              to="dashboard/bookParcel"
               className={({ isActive }) =>
                 `text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium ${isActive ? "text-blue-600" : ""}`
               }
@@ -80,7 +80,8 @@ const Navbar = () => {
               <>
                 <NavLink
                   to="/login"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 
+                  rounded-md text-sm font-medium"
                 >
                   Login
                 </NavLink>

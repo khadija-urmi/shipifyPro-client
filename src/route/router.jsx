@@ -1,136 +1,111 @@
-import {
-    createBrowserRouter,
-    // RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import DashboardLayout from "../layout/DashboardLayout";
 import Home from "../pages/Home/Home";
-import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Login from "../pages/Login/LogIn";
 import Register from "../pages/Register/Register";
 import BookParcel from "../pages/BookParcel/BookParcel";
-import PrivateRoute from "./PrivateRoute";
 import AboutUs from "../components/AboutUs/AboutUs";
-import MyProfile from "../pages/MyProfile/MyProfile";
-import PrevParcelDetails from "../components/PrevParcel/PrevParcelDetails";
+import PrivateRoute from "./PrivateRoute";
+import MyParcel from "../pages/Dashboard/UserMenu/MyParcel";
+import UpdateBooking from "../pages/Dashboard/updateBooking/UpdateBooking";
+import Statistics from "../pages/Dashboard/AdminPages/Statistics";
+import AllUser from "../pages/Dashboard/AdminPages/AllUser";
+import AllParcels from "../pages/Dashboard/AdminPages/AllParcels";
+import AllDeliveryMen from "../pages/Dashboard/AdminPages/AllDeliveryMen";
+import MyDeliveryList from "../pages/Dashboard/DeliveryMenPages/MyDeliveryList";
+import MyReviews from "../pages/Dashboard/DeliveryMenPages/MyReviews";
+import AdminRoutes from "./AdminRoutes";
+import DeliveryMenRoutes from "./DeliveryMenRoutes";
+import MyProfile from "../pages/Dashboard/UserMenu/MyProfile";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <MainLayout />,
-        errorElement: <ErrorPage />,
         children: [
             {
-                path: '/',
-                element: <Home />
+                path: "/",
+                element: <Home />,
             },
             {
-                path: '/login',
-                element: <Login />
+                path: "/login",
+                element: <Login />,
             },
             {
-                path: '/register',
-                element: <Register />
+                path: "/register",
+                element: <Register />,
             },
             {
-                path: '/recentParcel/:id',
-                element: <PrivateRoute><PrevParcelDetails /></PrivateRoute>
-            },
-
-            {
-                path: '/about-us',
-                element: <AboutUs />
-            },
-            {
-                path: '/book-parcel',
-                element: <PrivateRoute><BookParcel /></PrivateRoute>
+                path: "/about-us",
+                element: <AboutUs />,
             },
         ],
     },
     {
-        path: '/dashboard',
+        path: "/dashboard",
         element: <DashboardLayout />,
         children: [
             {
                 path: 'myProfile',
-                // index:true,
-                element: <PrivateRoute><MyProfile /></PrivateRoute>
+                element: <MyProfile />
             },
             {
-                // path:'/dashboard',
+
                 path: 'bookParcel',
-                // index:true,
-                element: <PrivateRoute><BookParcel /></PrivateRoute>
+                element: <BookParcel />
             },
-            // {
-            //     path: 'myParcel',
-            //     element: <PrivateRoute><MyParcel /></PrivateRoute>
-            // },
-            // {
-            //     path: 'updateBooking/:id',
-            //     loader: ({ params }) => fetch(`https://assignment-12-server-three-sage.vercel.app/parcels/${params.id}`),
-            //     element: <PrivateRoute><UpdateBooking /></PrivateRoute>
-            // },
-            // {
-            //     path: 'payment',
-            //     element: <PrivateRoute><Payment /></PrivateRoute>
-            // },
-            // {
-            //     path: 'paymentSuccess',
-            //     element: <PrivateRoute><PaymentSuccess /></PrivateRoute>
-            // },
-
-            // {
-            //   path: '/paymentHistory',
-            //   element:<PrivateRoute><PaymentHistory></PaymentHistory></PrivateRoute>
-            //  },
+            {
+                path: "myParcel",
+                element: <MyParcel />,
+            },
+            {
+                path: "updateBooking/:id",
+                loader: ({ params }) => fetch(`http://localhost:5000/parcels/${params.id}`),
+                element: <UpdateBooking />,
+            },
             /* ------------------------------ admin routes ------------------------------ */
-            // {
-            //     // index:true,
-            //     path: 'statistics',
-            //     // path:'/dashboard',
-            //     element: <PrivateRoute>
-            //         {/* <AdminRoutes> */}
-            //         <Statistics />
-            //         {/* </AdminRoutes> */}
-            //     </PrivateRoute>
-            // },
-            // {
-            //     path: 'allUsers',
-            //     element: <AdminRoutes><AllUser /></AdminRoutes>
-            // },
-            // {
-            //     path: 'allParcel',
-            //     loader: () => fetch('https://assignment-12-server-three-sage.vercel.app/delivery'),
-            //     element: <PrivateRoute><AdminRoutes><AllParcels /></AdminRoutes></PrivateRoute>
-            // },
-            // {
-            //     path: 'allDeliveryMen',
-            //     // loader:()=>fetch('https://assignment-12-server-three-sage.vercel.app/delivery'),
-            //     element: <PrivateRoute>
-            //         <AdminRoutes>
-            //             <AllDeliveryMen />
-            //         </AdminRoutes>
-            //     </PrivateRoute>
-            // },
-            // /* --------------------------- delivery men routes -------------------------- */
-            // {
-            //     path: 'myDeliveryList',
-            //     // loader:()=>fetch('https://assignment-12-server-three-sage.vercel.app/delivery'),
-            //     element: <PrivateRoute><DeliveryMenRoutes><MyDeliveryList /></DeliveryMenRoutes></PrivateRoute>
-            // },
-            // {
-            //     path: 'reviews',
-            //     // loader:()=>fetch('https://assignment-12-server-three-sage.vercel.app/delivery'),
-            //     element: <PrivateRoute><DeliveryMenRoutes><MyReviews /></DeliveryMenRoutes></PrivateRoute>
-            // },
-
-        ]
-    }
-
+            {
+                // index:true,
+                path: 'statistics',
+                // path:'/dashboard',
+                element: <PrivateRoute>
+                    {/* <AdminRoutes> */}
+                    <Statistics />
+                    {/* </AdminRoutes> */}
+                </PrivateRoute>
+            },
+            {
+                path: 'allUsers',
+                element: <AdminRoutes><AllUser /></AdminRoutes>
+            },
+            {
+                path: 'allParcel',
+                loader: () => fetch('http://localhost:5000/delivery'),
+                element: <PrivateRoute><AdminRoutes><AllParcels /></AdminRoutes></PrivateRoute>
+            },
+            {
+                path: 'allDeliveryMen',
+                element: <PrivateRoute>
+                    <AdminRoutes>
+                        <AllDeliveryMen />
+                    </AdminRoutes>
+                </PrivateRoute>
+            },
+            /* --------------------------- delivery men routes -------------------------- */
+            {
+                path: 'myDeliveryList',
+                element: <PrivateRoute><DeliveryMenRoutes><MyDeliveryList /></DeliveryMenRoutes></PrivateRoute>
+            },
+            {
+                path: 'reviews',
+                element: <PrivateRoute><DeliveryMenRoutes><MyReviews /></DeliveryMenRoutes></PrivateRoute>
+            },
+        ],
+    },
 ]);
 
-export default router
+export default router;
 
 
 

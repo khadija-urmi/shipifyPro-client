@@ -6,7 +6,11 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
+    const [address, setAddress] = useState({})
     const [user, setUser] = useState(null);
+    const [deliveryMenID, setDeliveryMenID] = useState();
+    const [total, setTotal] = useState(0);
+    const [parcelIds, setParcelIds] = useState(0);
 
     // signup with email
     const signUpWithEmail = (email, password) => {
@@ -17,9 +21,12 @@ const AuthProvider = ({ children }) => {
         setLoading(true)
         return signInWithEmailAndPassword(auth, email, password)
     }
-    const updateProfileData = (updateData) => {
+    const updateProfileData = (userName, image) => {
         setLoading(true)
-        return updateProfile(auth.currentUser, updateData)
+        return updateProfile(auth.currentUser, {
+            displayName: userName,
+            photoURL: image
+        });
     }
     const signOutUser = () => {
         setLoading(true)
@@ -54,13 +61,20 @@ const AuthProvider = ({ children }) => {
 
     const authInfo = {
         loading,
+        address, setAddress,
         signUpWithEmail,
         signInwithEmail,
         updateProfileData,
         signOutUser,
+        deliveryMenID,
+        setDeliveryMenID,
+        parcelIds,
+        setParcelIds,
         user,
         GoogleLogin,
-        githubLogin
+        githubLogin,
+        setTotal,
+        total
 
     }
     return (
