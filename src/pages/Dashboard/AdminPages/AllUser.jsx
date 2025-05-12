@@ -21,10 +21,6 @@ const AllUser = () => {
   const [currentPageData, setCurrentPageData] = useState([]);
   const { user } = useAuth();
 
-  console.log(user)
-
-
-
   const axiosPublic = useAxiosPublic()
   const { data: users = [], refetch } = useQuery({
     queryKey: ["users"],

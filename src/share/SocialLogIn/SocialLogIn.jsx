@@ -1,68 +1,57 @@
-import { FaGithub } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
+import { FaGoogle } from "react-icons/fa";
 import useAuth from "../../Hooks/useAuth";
-import { useNavigate } from "react-router-dom";
-import Swal from 'sweetalert2'
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
+import { useLocation, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
-const SocialLogin = () => {
-    const { GoogleLogin } = useAuth()
-    const navigate = useNavigate()
-    const axiosPublic = useAxiosPublic()
-    const { user } = useAuth();
+const SocialLogIn = () => {
+    const { GoogleLogin } = useAuth();
+    const axiosPublic = useAxiosPublic();
+    const navigate = useNavigate();
+    const location = useLocation();
 
+    const from = location.state?.from?.pathname || "/";
 
-    const handleGoogleLogin = async () => {
+    const handleGoogleLogIn = () => {
         GoogleLogin()
-            .then((res) => {
+            .then((result) => {
+                const userInfo = {
+                    name: result.user?.displayName,
+                    email: result.user?.email,
+                };
 
-                const userData = {
-                    name: res.user?.displayName,
-                    photo: res?.user?.photoURL,
-                    email: res.user?.email,
-                    role: "User",
-                }
-                console.log(userData)
-                axiosPublic
-                    .post("/users", userData)
-                    .then((res) => {
-                        if (res.data.insertedId) {
-                            Swal.fire({
-                                title: "Successfully !",
-                                text: "Signed Up",
-                                icon: "success"
-                            });
-                            navigate(from || "/", { replace: true });
-                        }
-                    })
-                    .catch((error) => {
-                        Swal.fire({
-                            title: "Error !",
-                            text: `Error adding user to database: ${error.message}`,
-                            icon: "error"
-                        });
-                    });
+                return axiosPublic.post("/users", userInfo);
+            })
+            .then((res) => {
+                console.log(res.data)
+                Swal.fire({
+                    title: "Success",
+                    text: "user successfully register",
+                    icon: "success",
+                });
+                navigate(from, { replace: true });
 
             })
-            .catch((err) => {
-                console.log(err.massage);
+            .catch((error) => {
+                Swal.fire({
+                    title: "Error",
+                    text: "user already register",
+                    icon: "error",
+                });
             });
     };
 
     return (
-        <>
-            <p className="divider pt-3 pb-2">OR</p>
-
-            <div className="flex justify-center items-center md:gap-6 mx-4">
-                <div
-                    onClick={handleGoogleLogin}
-                    className="text-xl cursor-pointer px-2 bg-white  flex items-center space-x-2"
-                >
-                    <FcGoogle /> <span className="text-lg font-semibold">Google</span>
-                </div>
-            </div>
-        </>
+        <div className="flex justify-center items-center w-full">
+            <button
+                onClick={handleGoogleLogIn}
+                className="bg-blue-500 text-white py-2 px-6 rounded-md shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4 flex items-center justify-center space-x-2"
+            >
+                <FaGoogle className="w-5 h-5" />
+                <span>Login with Google</span>
+            </button>
+        </div>
     );
 };
 
-export default SocialLogin;
+export default SocialLogIn;

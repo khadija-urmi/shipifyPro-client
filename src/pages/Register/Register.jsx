@@ -5,6 +5,7 @@ import useAuth from "../../Hooks/useAuth";
 import useAxiosPublic from "../../Hooks/useAxiosPublic";
 import SocialLogin from "../../share/SocialLogIn/SocialLogIn";
 import { uploadImageToServer } from "../../utility/utils";
+import axios from "axios";
 
 const Register = () => {
   const axiosPublic = useAxiosPublic();
@@ -44,28 +45,30 @@ const Register = () => {
         role: "User",
         photoURL: imageURL
       };
-
-      const signUpResponse = await signUpWithEmail(email, password);
-      await updateProfileData(fullName, imageURL);
-      console.log(signUpResponse);
-
-      const dbResponse = await axiosPublic.post('http://localhost:5000/users', userInfo);
-      if (dbResponse.data.insertedId) {
-        Swal.fire({
-          title: "Successfully !",
-          text: "Signed Up",
-          icon: "success"
-        });
-        console.log('Successfully added to database');
-      }
-      navigate('/');
+      await signUpWithEmail(email, password)
+        .then((result) => {
+          console.log(result)
+          updateProfileData(fullName, imageURL);
+          Swal.fire({
+            title: "Success",
+            text: "user successfully register",
+            icon: "success",
+          });
+          axios.post('http://localhost:5000/users', userInfo)
+            .then(res => {
+              if (res.data.insertedId) {
+                console.log('successfully added database')
+              }
+              console.log(res.data)
+            })
+            .catch(err => console.log(err))
+          navigate('/')
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     } catch (err) {
-      console.log(err);
-      Swal.fire({
-        title: "Error !",
-        text: `Error adding user to database: ${err.message}`,
-        icon: "error"
-      });
+      console.log(err)
     }
   };
 
@@ -158,6 +161,14 @@ const Register = () => {
             </div>
           </form>
           <div>
+            <div className="relative mt-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
             <SocialLogin />
           </div>
         </div>
